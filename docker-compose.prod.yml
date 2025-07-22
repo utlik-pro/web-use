@@ -46,12 +46,12 @@ services:
       - NODE_ENV=production
 
       # Browser Settings
-      - BROWSER_PATH=
-      - BROWSER_USER_DATA=
+      - BROWSER_PATH=${BROWSER_PATH:-}
+      - BROWSER_USER_DATA=${BROWSER_USER_DATA:-}
       - BROWSER_DEBUGGING_PORT=${BROWSER_DEBUGGING_PORT:-9222}
-      - BROWSER_DEBUGGING_HOST=localhost
-      - USE_OWN_BROWSER=false
-      - KEEP_BROWSER_OPEN=true
+      - BROWSER_DEBUGGING_HOST=${BROWSER_DEBUGGING_HOST:-0.0.0.0}
+      - USE_OWN_BROWSER=${USE_OWN_BROWSER:-false}
+      - KEEP_BROWSER_OPEN=${KEEP_BROWSER_OPEN:-true}
       - BROWSER_CDP=${BROWSER_CDP}
 
       # Display Settings
