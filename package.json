@@ -1,0 +1,19 @@
+{
+  "name": "web-ui-main",
+  "version": "1.0.0",
+  "description": "<img src=\"./assets/web-ui.png\" alt=\"Browser Use Web UI\" width=\"full\"/>",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0",
+    "playwright": "^1.54.1"
+  }
+}

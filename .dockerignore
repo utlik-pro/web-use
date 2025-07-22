@@ -1,0 +1,92 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+docs/
+DOKPLOY_DEPLOY.md
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# node_modules (если есть)
+node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.pytest_cache/
+
+# Development env files  
+.env.local
+.env.development
+.env.test
+.env
+
+# Tests
+tests/
+test/
+*.test.js
+*.spec.js
+
+# Build artifacts
+dist/
+build/
+target/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+results/
+
+# Docker files not needed in image
+docker-compose.yml
+docker-compose.*.yml
+Dockerfile.dev
+
+# Assets examples (только для уменьшения размера)
+assets/examples/
+
+# Local data
+data/
+*.sqlite
+*.db

@@ -1,0 +1,117 @@
+version: '3.8'
+
+services:
+  browser-use-webui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        TARGETPLATFORM: linux/amd64
+    ports:
+      - "${WEBUI_PORT:-7788}:7788"
+      - "${VNC_WEB_PORT:-6080}:6080"
+      - "${VNC_PORT:-5901}:5901" 
+      - "${DEBUG_PORT:-9222}:9222"
+    environment:
+      # LLM API Keys & Endpoints
+      - OPENAI_ENDPOINT=${OPENAI_ENDPOINT:-https://api.openai.com/v1}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_ENDPOINT=${ANTHROPIC_ENDPOINT:-https://api.anthropic.com}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
+      - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY}
+      - AZURE_OPENAI_API_VERSION=${AZURE_OPENAI_API_VERSION:-2025-01-01-preview}
+      - DEEPSEEK_ENDPOINT=${DEEPSEEK_ENDPOINT:-https://api.deepseek.com}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - MISTRAL_ENDPOINT=${MISTRAL_ENDPOINT:-https://api.mistral.ai/v1}
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}
+      - OLLAMA_ENDPOINT=${OLLAMA_ENDPOINT:-http://localhost:11434}
+      - ALIBABA_ENDPOINT=${ALIBABA_ENDPOINT:-https://dashscope.aliyuncs.com/compatible-mode/v1}
+      - ALIBABA_API_KEY=${ALIBABA_API_KEY}
+      - MOONSHOT_ENDPOINT=${MOONSHOT_ENDPOINT:-https://api.moonshot.cn/v1}
+      - MOONSHOT_API_KEY=${MOONSHOT_API_KEY}
+      - UNBOUND_ENDPOINT=${UNBOUND_ENDPOINT:-https://api.getunbound.ai}
+      - UNBOUND_API_KEY=${UNBOUND_API_KEY}
+      - IBM_ENDPOINT=${IBM_ENDPOINT:-https://us-south.ml.cloud.ibm.com}
+      - IBM_API_KEY=${IBM_API_KEY}
+      - IBM_PROJECT_ID=${IBM_PROJECT_ID}
+      - GROK_ENDPOINT=${GROK_ENDPOINT:-https://api.x.ai/v1}
+      - GROK_API_KEY=${GROK_API_KEY}
+
+      # Application Settings
+      - DEFAULT_LLM=${DEFAULT_LLM:-openai}
+      - ANONYMIZED_TELEMETRY=${ANONYMIZED_TELEMETRY:-false}
+      - BROWSER_USE_LOGGING_LEVEL=${BROWSER_USE_LOGGING_LEVEL:-info}
+      - NODE_ENV=production
+
+      # Browser Settings
+      - BROWSER_PATH=
+      - BROWSER_USER_DATA=
+      - BROWSER_DEBUGGING_PORT=${BROWSER_DEBUGGING_PORT:-9222}
+      - BROWSER_DEBUGGING_HOST=localhost
+      - USE_OWN_BROWSER=false
+      - KEEP_BROWSER_OPEN=true
+      - BROWSER_CDP=${BROWSER_CDP}
+
+      # Display Settings
+      - DISPLAY=:99
+      - PLAYWRIGHT_BROWSERS_PATH=/ms-browsers
+      - RESOLUTION=${RESOLUTION:-1920x1080x24}
+      - RESOLUTION_WIDTH=${RESOLUTION_WIDTH:-1920}
+      - RESOLUTION_HEIGHT=${RESOLUTION_HEIGHT:-1080}
+
+      # VNC Settings  
+      - ENV_VNC_PASSWORD=${VNC_PASSWORD:-changeme123}
+      - ENV_RESOLUTION=${RESOLUTION:-1920x1080x24}
+
+    # Volumes для персистентности данных
+    volumes:
+      - browser_data:/app/data
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    
+    # Настройки ресурсов
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2.0'
+        reservations:
+          memory: 2G
+          cpus: '1.0'
+    
+    restart: unless-stopped
+    shm_size: '2gb'
+    
+    # Capabilities для правильной работы браузера
+    cap_add:
+      - SYS_ADMIN
+      - NET_ADMIN
+    
+    # Temporary filesystems
+    tmpfs:
+      - /tmp:size=1G
+      - /dev/shm:size=2G
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7788/", "||", "exit", "1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+    # Security options  
+    security_opt:
+      - seccomp:unconfined
+      - apparmor:unconfined
+
+# Named volumes
+volumes:
+  browser_data:
+    driver: local
+
+# Networks
+networks:
+  default:
+    driver: bridge 
